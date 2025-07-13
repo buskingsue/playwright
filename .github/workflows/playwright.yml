@@ -1,4 +1,4 @@
-name: Playwright Test with Artifact Upload & Download
+name: Playwright and Commit Screenshot
 
 on:
   push:
@@ -6,12 +6,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-playwright:
+  run-playwright-and-commit:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        persist-credentials: true  # 기본 GITHUB_TOKEN 권한 유지
+        fetch-depth: 0            # 전체 커밋 히스토리 가져오기
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -27,22 +30,15 @@ jobs:
     - name: Run Playwright script
       run: python script.py
 
-    - name: Upload screenshot artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: naver-screenshot
-        path: naver.png
+    - name: Configure git user
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
 
-  use-artifact:
-    runs-on: ubuntu-latest
-    needs: run-playwright  # 이전 job이 성공해야 실행
+    - name: Add and commit screenshot
+      run: |
+        git add naver.png
+        git commit -m "Add naver.png screenshot from GitHub Actions" || echo "No changes to commit"
 
-    steps:
-    - name: Download screenshot artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: naver-screenshot
-        path: ./screenshots
-
-    - name: List downloaded screenshots
-      run: ls -l ./screenshots
+    - name: Push changes
+      run: git push
