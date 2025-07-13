@@ -35,6 +35,6 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add naver.png
-        git commit -m "Add screenshot (naver.png)" || echo "No changes to commit"
+        git add smart_farm.png
+        git commit -m "Add screenshot (smart_farm.png)" || echo "No changes to commit"
         git push
