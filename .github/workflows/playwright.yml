@@ -1,9 +1,12 @@
-name: Playwright Test with Commit Image
+name: Playwright Test with Screenshot Commit
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
+
+permissions:
+  contents: write  # 👈 Push 권한 부여!
 
 jobs:
   run-playwright:
@@ -33,5 +36,5 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add naver.png
-        git commit -m "Add screenshot to repository" || echo "No changes"
-        git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+        git commit -m "Add screenshot (naver.png)" || echo "No changes to commit"
+        git push
