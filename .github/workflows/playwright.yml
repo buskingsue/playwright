@@ -27,7 +27,12 @@ jobs:
       run: |
         pip install playwright
         playwright install
-
+    - name: Install Korean fonts
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y fonts-nanum
+        fc-cache -fv
+        
     - name: Run Playwright script
       run: python script.py
 
