@@ -1,10 +1,20 @@
+name: Playwright and Commit Screenshot
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
   run-playwright-and-commit:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
       with:
-        fetch-depth: 0
+        persist-credentials: true  # 기본 GITHUB_TOKEN 권한 유지
+        fetch-depth: 0            # 전체 커밋 히스토리 가져오기
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -20,19 +30,15 @@ jobs:
     - name: Run Playwright script
       run: python script.py
 
-    - name: Configure git
+    - name: Configure git user
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
-    - name: Commit changes
+    - name: Add and commit screenshot
       run: |
         git add naver.png
         git commit -m "Add naver.png screenshot from GitHub Actions" || echo "No changes to commit"
 
-    - name: Push changes using PAT
-      env:
-        TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      run: |
-        git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git
-        git push origin HEAD:main
+    - name: Push changes
+      run: git push
