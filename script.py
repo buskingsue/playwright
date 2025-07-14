@@ -6,7 +6,7 @@ async def main():
         browser = await p.chromium.launch(headless=True)  # GitHub Actions는 headless=True 필수
         context = await browser.new_context(viewport=None)
         page = await context.new_page()
-        await page.goto("https://smartgrow-jftea.pyxl.ai/")
+        await page.goto("https://smartgrow-jftea.pyxl.ai/boss")
         await asyncio.sleep(5)
         await page.screenshot(path="smart_farm.png", full_page=True)
         await browser.close()
